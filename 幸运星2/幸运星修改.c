@@ -52,29 +52,30 @@ typedef struct luck
 
 
 /*--------------------------------------------------------------全局变量以及函数的声明------------------------------------------------------*/
+int numperson,numprize=3; //参赛游戏人数，奖品总数
 Person * personhead=NULL; //人员头指针
 Prize * prizehead=NULL; //奖品头指针
 Elimination * peoplehead=NULL; //淘汰人员头指针
 Person * final=NULL;//用于存放圆环最后一人
-Person * enter(int numperson); //输入参赛游戏人员信息
-void wholeprize(int numprize); //输入奖品池信息
+Person * enter(); //输入参赛游戏人员信息
+void wholeprize(); //输入奖品池信息
 void gamebegin();//开始界面
-void gameplay(int numperson,int numprize); //游戏过程
-void information(int numperson);//开局信息
-void saveinformation(int numperson);//存储信息
+void gameplay(); //游戏过程
+void information();//开局信息
+void saveinformation();//存储信息
 void read();//显示排行榜
 void backspace();//删除信息
 void seek();//查找学生幸运状态
 void error();//菜单错误输入
 void end();//结束
 void del();//删除文件
+void load();//载入信息-----------不写了
 
 
 /*------------------------------------------------------------主函数------------------------------------------------------------------*/
 int main()
 {
 	char c;//选择
-	int numperson,numprize=3; //参赛游戏人数，奖品总数
 	srand((unsigned)time(NULL)); //随机
 	system("mode con cols=81");
 	system("color f0");
@@ -93,7 +94,7 @@ int main()
 			printf("  \t\t请输入参与本游戏的人数：");
 			scanf("%d",&numperson);
 			printf("  \t\t围成圈（顺时针）站好后的人名：\n");
-			final=enter(numperson);
+			final=enter();
 			printf("  \t\t请输入奖品总数（最少三个）：");
 			do
 			{
@@ -104,13 +105,13 @@ int main()
 				scanf("%d",&numprize);
 			}while(numprize<3);//奖品最少三个
 			printf("  \t\t请输入奖品信息（奖品名字 奖品价格）\n");
-			wholeprize(numprize);
+			wholeprize();
 			printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
 			Sleep(300);
 			system("cls");
-			information(numperson);
-			saveinformation(numperson);
-			gameplay(numperson,numprize);
+			information();
+			saveinformation();
+			gameplay();
 		}
 		else if(c=='2')
 		{
@@ -142,7 +143,7 @@ int main()
 
 
 /*-------------------------------------------------------人员信息输入-------------------------------------------------------------------*/
-Person * enter(int numperson)
+Person * enter()
 {
 	int number;//用来暂时存参与游戏人员的编号
 	char name[30];//用来暂时存参与游戏人员的姓名
@@ -176,7 +177,7 @@ Person * enter(int numperson)
 
 
 /*-------------------------------------------------------奖品池信息输入-----------------------------------------------------------------*/
-void wholeprize(int numprize)
+void wholeprize()
 {
 	int number;//暂时存放奖品编号
 	char name[30];//暂时存放奖品名称
@@ -210,7 +211,7 @@ void wholeprize(int numprize)
 
 
 /*---------------------------------------------------------游戏过程---------------------------------------------------------------------*/
-void gameplay(int numperson,int numprize)
+void gameplay()
 {
 	int k;//骰子随机数
 	int i;//报数
@@ -371,7 +372,7 @@ void gameplay(int numperson,int numprize)
 
 
 /*-------------------------------------------------------游戏开始后所有信息展示----------------------------------------------------------*/
-void information(int numperson)//开局信息
+void information()//开局信息
 {
 	int number;//用于从第一个人开始到一圈的最后一个人
 	Person * personlist=personhead;//建立用于移动的不影响头指针的指针
@@ -400,7 +401,7 @@ void information(int numperson)//开局信息
 
 
 /*--------------------------------------------------参与人员和奖品池信息的存储-------------------------------------------------------------*/
-void saveinformation(int numperson)
+void saveinformation()
 {
 	int number;//用于从第一个人开始到一圈的最后一个人
 	Person * PERSONhead=personhead;//建立用于移动的不影响头指针的指针
@@ -481,6 +482,7 @@ void read()
 		}
 		printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n");
 		printf("（按1根据姓名查询）");
+		fclose(fp);
 	}
 }
 
@@ -488,7 +490,8 @@ void read()
 /*----------------------------------------------------已存信息删除（旧不删文件）-----------------------------------------------------------*/
 void backspace()
 {
-	FILE * fp=fopen("C:\\Program Files\\数据.txt","w");
+	FILE * fp;
+	fp=fopen("C:\\Program Files\\数据.txt","w");
 	fclose(fp);
 	fp=fopen("C:\\Program Files\\排行榜数据.txt","w");
 	fclose(fp);
